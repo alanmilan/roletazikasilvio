@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Roleta do Zika Silvio</title>
+    <style>
+        body {
+            background: #070a1a;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            /* overflow: hidden; -> Removido para que a barra de rolagem geral funcione se necessário */
+        }
+        .roleta-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto 0 auto;
+            overflow: hidden;
+            border: 3px solid #333;
+            border-radius: 15px;
+            background: #1c1c1c;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .roleta {
+            display: flex;
+            position: relative;
+            min-height: 180px; 
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+        .item {
+            min-width: 180px;
+            height: 180px;
+            margin: 0 10px;
+            background: #4a2c2c;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: default; 
+            position: relative;
+        }
+        .item img {
+            display: block;
+            max-height: 100px; 
+            width: auto; 
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+        .item.highlight {
+            background: #ffcc00;
+            color: #000;
+            box-shadow: 0 0 25px #ffcc00, inset 0 0 10px rgba(0, 0, 0, 0.5);
+            transform: scale(1.15);
+            transition: all 0.3s ease;
+        }
+        .roleta-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #cc00ff;
+            z-index: 10;
+        }
+        
+        /* --- ESTILOS DA LISTA DE ITENS (EDIÇÃO) - CORRIGIDO O OVERFLOW --- */
+        #listaItensContainer {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 900px;
+            padding: 15px;
+            background: #1c1c1c;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            /* CORREÇÃO AQUI: Adiciona altura máxima e barra de rolagem vertical */
+            max-height: 350px; 
+            overflow-y: auto;
+        }
+
+        #listaItens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #listaItens li {
+            flex: 1 1 calc(33.333% - 30px);
+            max-width: 280px;
+            background: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        #listaItens li img {
+            width: 40px; 
+            height: 40px;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+        
+        #listaItens li .item-info {
+            flex-grow: 1;
+        }
+
+        /* --- Estilos diversos --- */
+        #adicionarItem {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+            justify-content: center;
+        }
+        #novoItemInput {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background: #333;
+            color: white;
+            font-size: 16px;
+            flex-grow: 1;
+        }
+        #addItemBtn {
+            background: #cc00ff;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        #addItemBtn:hover {
+            background: #9900cc;
+        }
+        #spinBtn, #clearBtn {
+            margin: 10px;
+            background: #00c97b;
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #clearBtn {
+            background: #e74c3c;
+        }
+        #clearBtn:hover {
+            background: #c0392b;
+        }
+        #spinBtn:disabled, #clearBtn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        .remover-btn {
+            position: static;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        .empty-message {
+            color: #aaa;
+            font-size: 20px;
+            padding: 0 20px;
+            margin: auto;
+        }
+        
+        .logo-roleta {
+            width: 350px; 
+            margin-bottom: 25px;
+            margin-top: -5px;
+            filter: drop-shadow(0 0 10px rgba(204, 0, 255, 0.4));
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <img src="roletalogo.png" alt="Logo Roleta do Zika Silvio" class="logo-roleta" />
+
+    <div id="adicionarItem">
+        <input type="text" id="novoItemInput" placeholder="Digite o novo item..." maxlength="30">
+        <button id="addItemBtn">Adicionar</button>
+    </div>
+
+    <p id="minItemsAviso" class="aviso" style="display: block;">Adicione pelo menos 3 itens para girar a roleta!</p>
+
+    <div class="roleta-container">
+        <div class="roleta" id="roleta">
+            <div class="empty-message">Adicione seu primeiro item acima!</div>
+        </div>
+        <div class="roleta-pointer"></div>
+    </div>
+
+    <div>
+        <button id="spinBtn" disabled>Girar Roleta</button>
+        <button id="clearBtn">Limpar Todos</button>
+    </div>
+    
+    <h2 id="resultado"></h2>
+
+    <div id="listaItensContainer" style="display:none;">
+        <h3>Itens Atuais na Roleta:</h3>
+        <ul id="listaItens">
+            </ul>
+    </div>
+
+
+    <audio id="tickSound" src="tick_sound.mp3" preload="auto"></audio>
+    <audio id="winSound" src="https://www.soundjay.com/button/button-3.wav" preload="auto"></audio>
+
+    <script>
+        const IMAGEM_PADRAO_URL = 'zika.png'; 
+        const STORAGE_KEY = 'zika_silvio_roleta_itens';
+
+        let itens = [];
+        const roleta = document.getElementById("roleta");
+        const listaItensUl = document.getElementById("listaItens"); 
+        const listaItensContainer = document.getElementById("listaItensContainer"); 
+        const resultado = document.getElementById("resultado");
+        const spinBtn = document.getElementById("spinBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const addItemBtn = document.getElementById("addItemBtn");
+        const novoItemInput = document.getElementById("novoItemInput");
+        const minItemsAviso = document.getElementById("minItemsAviso");
+        const tickSound = document.getElementById("tickSound");
+        const winSound = document.getElementById("winSound");
+
+        const ITEM_MARGIN = 10;
+        const ITEM_WIDTH = 180;
+        const itemFullWidth = ITEM_WIDTH + (ITEM_MARGIN * 2); 
+        const NUM_CLONES_TO_SKIP = 30;
+
+        let isSpinning = false;
+        let clones = [];
+        
+        // --- Funções de Persistência (Cache/localStorage) ---
+        function carregarItens() {
+            try {
+                const storedItens = localStorage.getItem(STORAGE_KEY);
+                if (storedItens) {
+                    itens = JSON.parse(storedItens);
+                } else {
+                    itens = [];
+                }
+            } catch (e) {
+                console.error("Erro ao carregar itens do localStorage:", e);
+                itens = [];
+            }
+        }
+        
+        function salvarItens() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(itens));
+            } catch (e) {
+                console.error("Erro ao salvar itens no localStorage:", e);
+            }
+        }
+
+        // --- Funções de Gestão de Itens ---
+        function atualizarListaItens() {
+            // Volta para o estado de edição: roleta principal limpa, lista de edição visível
+            roleta.innerHTML = "";
+            roleta.style.transform = "translateX(0)";
+            roleta.style.transition = "none";
+            
+            listaItensUl.innerHTML = "";
+
+            if (itens.length === 0) {
+                roleta.innerHTML = '<div class="empty-message">Adicione seu primeiro item acima!</div>';
+                listaItensContainer.style.display = 'none';
+                spinBtn.disabled = true;
+                clearBtn.disabled = true;
+                minItemsAviso.style.display = 'block';
+                return;
+            }
+
+            listaItensContainer.style.display = 'block';
+
+            itens.forEach((premio, index) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <img src="${IMAGEM_PADRAO_URL}" alt="Foto do Item"/>
+                    <span class="item-info">${premio.valor}</span>
+                    <button class="remover-btn" onclick="removerItem(${index});">X</button>
+                `;
+                listaItensUl.appendChild(listItem);
+            });
+            
+            if (itens.length >= 3) {
+                spinBtn.disabled = false;
+                minItemsAviso.style.display = 'none';
+            } else {
+                spinBtn.disabled = true;
+                minItemsAviso.style.display = 'block';
+            }
+            clearBtn.disabled = false;
+            salvarItens();
+        }
+        
+        function adicionarItem() {
+            const valor = novoItemInput.value.trim();
+            if (valor) { 
+                if (itens.length < 50) { 
+                    itens.push({ valor: valor });
+                    novoItemInput.value = ""; 
+                    atualizarListaItens();
+                    resultado.textContent = `Item "${valor}" adicionado!`;
+                } else {
+                     resultado.textContent = "Limite máximo de 50 itens atingido!";
+                }
+            }
+        }
+        
+        function removerItem(indexParaRemover) {
+            itens.splice(indexParaRemover, 1); 
+            atualizarListaItens();
+            resultado.textContent = "Item removido!";
+        }
+        
+        function limparTodosItens() {
+            if (confirm("Tem certeza que deseja limpar todos os itens da roleta?")) {
+                itens = [];
+                salvarItens(); 
+                atualizarListaItens();
+                resultado.textContent = "Roleta limpa!";
+            }
+        }
+
+        // --- Funções de Giro da Roleta ---
+        function escolherPremio() {
+            if (itens.length === 0) return null;
+            const indexSorteado = Math.floor(Math.random() * itens.length);
+            return { premio: itens[indexSorteado], originalIndex: indexSorteado };
+        }
+
+        function gerarItensParaGiro(premioFinal, originalIndex) {
+            roleta.innerHTML = "";
+            clones = [];
+            const numItens = itens.length;
+            
+            const indiceDoMeio = NUM_CLONES_TO_SKIP + Math.floor(Math.random() * 10); 
+            
+            for (let i = 0; i < 100; i++) {
+                let premioParaInserir;
+                if (i === indiceDoMeio) {
+                    premioParaInserir = premioFinal;
+                } else {
+                    premioParaInserir = itens[Math.floor(Math.random() * numItens)];
+                }
+                
+                const item = document.createElement("div");
+                item.className = "item"; 
+                item.dataset.valor = premioParaInserir.valor;
+                item.dataset.index = i; 
+                item.innerHTML = `<img src="${IMAGEM_PADRAO_URL}" alt="Item"/><div>${premioParaInserir.valor}</div>`;
+                roleta.appendChild(item);
+                clones.push(item);
+            }
+            
+            roleta.style.width = `${clones.length * itemFullWidth}px`;
+            roleta.style.transition = "none";
+            roleta.style.transform = "translateX(0)";
+            roleta.offsetHeight; 
+            
+            return indiceDoMeio;
+        }
+
+        function iniciarTickDuranteGiro(duracaoTotal) {
+            let lastX = null, lastTickTime = 0, lastHighlightIndex = -1;
+            const tickMin = 30, tickMax = 250;
+            const startTime = performance.now();
+            const center = roleta.parentElement.offsetWidth / 2;
+
+            function loop(now) {
+                const elapsed = now - startTime;
+                if (elapsed >= duracaoTotal - 500) return;
+                
+                const matrix = new DOMMatrix(getComputedStyle(roleta).transform);
+                const currentX = matrix.m41;
+
+                if (lastX !== null) {
+                    const delta = Math.abs(currentX - lastX);
+                    const idealInterval = Math.max(tickMin, Math.min(tickMax, 800 / (delta + 0.1)));
+                    
+                    if (now - lastTickTime > idealInterval) {
+                        const visualCenter = Math.abs(currentX) + center;
+                        const index = Math.floor(visualCenter / itemFullWidth); 
+                        
+                        if (index !== lastHighlightIndex) {
+                            tickSound.pause();
+                            tickSound.currentTime = 0;
+                            tickSound.play();
+                            lastTickTime = now;
+                            lastHighlightIndex = index;
+                        }
+                    }
+                }
+
+                lastX = currentX;
+                requestAnimationFrame(loop);
+            }
+            requestAnimationFrame(loop);
+        }
+        
+        // NOVO: Função para manter os itens da roleta visíveis após o giro
+        function finalizarGiro() {
+            // Remove o destaque dos itens (exceto o vencedor, que mantém)
+            clones.forEach(i => {
+                if (!i.classList.contains("highlight")) {
+                    i.style.opacity = '0.5'; // Deixa os perdedores um pouco opacos
+                }
+            });
+            roleta.style.width = 'auto'; // Retira a largura forçada (mantém a animação no lugar)
+
+            // Reativa botões e mostra a lista de edição
+            spinBtn.disabled = false;
+            clearBtn.disabled = false;
+            listaItensContainer.style.display = 'block'; 
+        }
+
+        function girarRoleta() {
+            if (isSpinning || itens.length < 3) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+            clearBtn.disabled = true;
+            resultado.textContent = "";
+            listaItensContainer.style.display = 'none'; // Oculta a lista durante o giro
+
+            const { premio: premioFinal, originalIndex } = escolherPremio();
+            const indexAlvo = gerarItensParaGiro(premioFinal, originalIndex);
+            
+            // Pequeno atraso para o recálculo do DOM antes de girar
+            setTimeout(() => {
+                const itemVencedor = clones[indexAlvo];
+                
+                const centroDoContainer = roleta.parentElement.offsetWidth / 2;
+                const destino = itemVencedor.offsetLeft + (ITEM_WIDTH / 2) - centroDoContainer;
+
+                roleta.style.transition = "transform 12s cubic-bezier(0.16, 1, 0.3, 1)";
+                roleta.style.transform = `translateX(-${destino}px)`;
+
+                iniciarTickDuranteGiro(12000);
+
+                setTimeout(() => {
+                    clones.forEach(i => i.classList.remove("highlight"));
+                    itemVencedor.classList.add("highlight");
+                    winSound.play();
+
+                    resultado.innerHTML = `<span class='animado-amarelo'>GANHOU: ${premioFinal.valor.toUpperCase()}!</span>`;
+                    
+                    isSpinning = false;
+                    
+                    // CHAMA A NOVA FUNÇÃO QUE MANTÉM OS ITENS VISÍVEIS
+                    setTimeout(finalizarGiro, 1500); 
+
+                }, 12000);
+            }, 50); 
+        }
+
+        // --- Listeners de Eventos ---
+        addItemBtn.addEventListener("click", adicionarItem);
+        clearBtn.addEventListener("click", limparTodosItens);
+        novoItemInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") adicionarItem();
+        });
+        spinBtn.addEventListener("click", girarRoleta);
+        
+        window.removerItem = removerItem;
+
+        // --- Inicialização ---
+        carregarItens();
+        atualizarListaItens();
+    </script>
+</body>
+</html>
