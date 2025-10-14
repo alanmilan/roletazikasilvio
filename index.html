@@ -16,7 +16,7 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            /* overflow: hidden; -> Removido para que a barra de rolagem geral funcione se necessário */
+            
         }
         .roleta-container {
             width: 90%;
@@ -85,7 +85,7 @@
             z-index: 10;
         }
         
-        /* --- ESTILOS DA LISTA DE ITENS (EDIÇÃO) - CORRIGIDO O OVERFLOW --- */
+        
         #listaItensContainer {
             margin-top: 20px;
             width: 90%;
@@ -95,7 +95,7 @@
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             text-align: left;
-            /* CORREÇÃO AQUI: Adiciona altura máxima e barra de rolagem vertical */
+           
             max-height: 350px; 
             overflow-y: auto;
         }
@@ -135,7 +135,7 @@
             flex-grow: 1;
         }
 
-        /* --- Estilos diversos --- */
+        
         #adicionarItem {
             margin: 20px 0;
             display: flex;
@@ -270,7 +270,7 @@
         let isSpinning = false;
         let clones = [];
         
-        // --- Funções de Persistência (Cache/localStorage) ---
+       
         function carregarItens() {
             try {
                 const storedItens = localStorage.getItem(STORAGE_KEY);
@@ -293,9 +293,9 @@
             }
         }
 
-        // --- Funções de Gestão de Itens ---
+        
         function atualizarListaItens() {
-            // Volta para o estado de edição: roleta principal limpa, lista de edição visível
+           
             roleta.innerHTML = "";
             roleta.style.transform = "translateX(0)";
             roleta.style.transition = "none";
@@ -363,7 +363,7 @@
             }
         }
 
-        // --- Funções de Giro da Roleta ---
+        
         function escolherPremio() {
             if (itens.length === 0) return null;
             const indexSorteado = Math.floor(Math.random() * itens.length);
@@ -439,17 +439,17 @@
             requestAnimationFrame(loop);
         }
         
-        // NOVO: Função para manter os itens da roleta visíveis após o giro
+        
         function finalizarGiro() {
-            // Remove o destaque dos itens (exceto o vencedor, que mantém)
+           
             clones.forEach(i => {
                 if (!i.classList.contains("highlight")) {
-                    i.style.opacity = '0.5'; // Deixa os perdedores um pouco opacos
+                    i.style.opacity = '0.5'; // 
                 }
             });
-            roleta.style.width = 'auto'; // Retira a largura forçada (mantém a animação no lugar)
+            roleta.style.width = 'auto'; // 
 
-            // Reativa botões e mostra a lista de edição
+       
             spinBtn.disabled = false;
             clearBtn.disabled = false;
             listaItensContainer.style.display = 'block'; 
@@ -461,12 +461,12 @@
             spinBtn.disabled = true;
             clearBtn.disabled = true;
             resultado.textContent = "";
-            listaItensContainer.style.display = 'none'; // Oculta a lista durante o giro
+            listaItensContainer.style.display = 'none'; 
 
             const { premio: premioFinal, originalIndex } = escolherPremio();
             const indexAlvo = gerarItensParaGiro(premioFinal, originalIndex);
             
-            // Pequeno atraso para o recálculo do DOM antes de girar
+       
             setTimeout(() => {
                 const itemVencedor = clones[indexAlvo];
                 
@@ -487,14 +487,14 @@
                     
                     isSpinning = false;
                     
-                    // CHAMA A NOVA FUNÇÃO QUE MANTÉM OS ITENS VISÍVEIS
+                    
                     setTimeout(finalizarGiro, 1500); 
 
                 }, 12000);
             }, 50); 
         }
 
-        // --- Listeners de Eventos ---
+        
         addItemBtn.addEventListener("click", adicionarItem);
         clearBtn.addEventListener("click", limparTodosItens);
         novoItemInput.addEventListener("keypress", (e) => {
@@ -504,9 +504,10 @@
         
         window.removerItem = removerItem;
 
-        // --- Inicialização ---
+       
         carregarItens();
         atualizarListaItens();
     </script>
 </body>
+
 </html>
