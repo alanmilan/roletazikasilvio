@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<title>Roleta Krustzao</title>
+<title>Roleta - Itens Dinâmicos</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
@@ -28,240 +28,40 @@ body {
   min-height: 100vh;
   padding-left: 260px;
 }
-.logo {
-  max-width: 360px;
-  filter: drop-shadow(0 0 14px var(--accent));
-}
-.header-row {
-  width: 100%;
-  max-width: 1100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-h1 {
-  font-family: 'Orbitron', sans-serif;
-  margin: 0;
-  color: #fff;
-  text-shadow: 0 0 12px #00ffff;
-}
-.controls {
-  width: 100%;
-  max-width: 1100px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-}
-.form-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-}
-.form-row .field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-input[type="text"], input[type="color"] {
-  background: #0d0d18;
-  border: 1px solid #2b2b36;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 8px;
-  min-width: 180px;
-  outline: none;
-  font-size: 14px;
-}
-.btn {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-}
+.logo { max-width: 360px; filter: drop-shadow(0 0 14px var(--accent)); }
+h1 { font-family: 'Orbitron', sans-serif; margin: 0; color: #fff; text-shadow:0 0 12px #00ffff;}
+.controls { width: 100%; max-width: 1100px; background: var(--card); border-radius: 10px; padding: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+.form-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+.form-row .field { display: flex; flex-direction: column; gap: 6px; }
+input[type="text"], input[type="color"] { background:#0d0d18; border:1px solid #2b2b36; color:#fff; padding:10px 12px; border-radius:8px; min-width:180px; outline:none; font-size:14px; }
+.btn { padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
 #addItemBtn { background: #00b27a; color: #001b10; }
 #resetItemsBtn { background: #b33b3b; }
-#resetLivesBtn { background: #337ab7; color: #fff; }
-
-#spinBtn {
-  background: linear-gradient(90deg, #cc00ff, #7a00ff);
-  color: white;
-  padding: 14px 26px;
-  font-size: 18px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Orbitron', sans-serif;
-  text-shadow: 0 0 6px #000;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-  transition: transform 0.2s;
-}
-#spinBtn:hover {
-  transform: scale(1.05);
-}
-#spinBtn:disabled {
-  background: #444;
-  cursor: not-allowed;
-}
-
-.roleta-wrapper {
-  width: 100%;
-  max-width: 1100px;
-  overflow: hidden;
-  position: relative;
-}
-.roleta-container {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  max-width: 1100px;
-}
-.roleta {
-  display: flex;
-  transform: translateX(0);
-}
-.item {
-  min-width: 190px;
-  height: 160px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #fff;
-  text-align: center;
-  padding: 8px;
-  flex-shrink: 0;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-}
-.item img {
-  max-height: 56px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.06));
-}
-.roleta-pointer {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-top: 40px solid #ffcc00;
-  filter: drop-shadow(0 0 10px #ffcc00);
-  z-index: 10;
-}
-.roleta-wrapper {
-  width: 100%;
-  max-width: 1100px;
-  overflow: visible; /* permitir que as vidas apareçam */
-  position: relative;
-  padding-top: 60px; /* espaço para as vidas em cima */
-}
-.vidas {
-  display: flex;
-  gap: 8px;
-  position: absolute;
-  top: -50px;        /* Subir mais para cima */
-  left: 50%;         /* Centralizar horizontalmente */
-  transform: translateX(-50%);
-  z-index: 20;
-}
-.vida-icon {
-  font-size: 26px;
-  transition: filter 0.3s;
-}
-.vida-icon.desativada {
-  filter: grayscale(1) brightness(0.4);
-}
-
-.result-text {
-  font-weight: 700;
-  font-size: 18px;
-  text-align: center;
-  margin-top: 12px;
-}
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 240px;
-  background-color: var(--card);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  z-index: 10;
-}
-.sidebar h2 {
-  margin: 0;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  color: var(--accent);
-}
-.sidebar .field label {
-  font-size: 12px;
-  color: #bbb;
-}
-.sidebar input[type="text"], .sidebar input[type="color"] {
-  width: 100%;
-  font-size: 13px;
-}
-.sidebar .btn {
-  width: 100%;
-  font-size: 13px;
-  padding: 8px 12px;
-}
-.table-wrap {
-  width: 100%;
-  max-width: 1100px;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-}
-.table {
-  width: 100%;
-  background: transparent;
-  border-collapse: collapse;
-  margin-top: 6px;
-}
-.table thead th {
-  background: transparent;
-  color: #ccc;
-  font-weight: 700;
-  padding: 8px 10px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.table tbody td {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  vertical-align: middle;
-}
-.row-img {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-right: 8px;
-}
-.row-img img {
-  max-width: 100%;
-  max-height: 100%;
-}
+#resetLivesBtn { background: #337ab7; color:#fff; }
+#spinBtn { background: linear-gradient(90deg,#cc00ff,#7a00ff); color:white; padding:14px 26px; font-size:18px; border:none; border-radius:10px; font-family:'Orbitron',sans-serif; text-shadow:0 0 6px #000; box-shadow:0 6px 16px rgba(0,0,0,0.4); transition:transform 0.2s; }
+#spinBtn:hover { transform:scale(1.05); }
+#spinBtn:disabled { background:#444; cursor:not-allowed; }
+.roleta-wrapper { width:100%; max-width:1100px; overflow:visible; position:relative; padding-top:60px; }
+.vidas { display:flex; gap:8px; position:absolute; top:-50px; left:50%; transform:translateX(-50%); z-index:20; }
+.vida-icon { font-size:26px; transition:filter 0.3s; }
+.vida-icon.desativada { filter:grayscale(1) brightness(0.4); }
+.roleta-container { background: var(--card); border-radius:12px; padding:14px; box-shadow:0 8px 30px rgba(0,0,0,0.6); overflow:hidden; position:relative; width:100%; max-width:1100px; }
+.roleta { display:flex; transform:translateX(0); }
+.item { min-width:190px; height:160px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; color:#fff; text-align:center; padding:8px; flex-shrink:0; box-shadow:0 8px 18px rgba(0,0,0,0.5); }
+.item img { max-height:56px; margin-bottom:8px; filter:drop-shadow(0 0 6px rgba(255,255,255,0.06)); }
+.roleta-pointer { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:25px solid transparent; border-right:25px solid transparent; border-top:40px solid #ffcc00; filter:drop-shadow(0 0 10px #ffcc00); z-index:10; }
+.table-wrap { width:100%; max-width:1100px; background:transparent; display:flex; justify-content:center; }
+.table { width:100%; background:transparent; border-collapse:collapse; margin-top:6px; }
+.table thead th { background:transparent; color:#ccc; font-weight:700; padding:8px 10px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.04); }
+.table tbody td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; }
+.row-img { width:56px; height:56px; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-right:8px; }
+.row-img img { max-width:100%; max-height:100%; }
+.sidebar { position:fixed; left:0; top:0; bottom:0; width:240px; background-color:var(--card); padding:20px; display:flex; flex-direction:column; gap:14px; z-index:10; }
+.sidebar h2 { margin:0; font-family:'Orbitron',sans-serif; font-size:18px; color:var(--accent); }
+.sidebar .field label { font-size:12px; color:#bbb; }
+.sidebar input[type="text"], .sidebar input[type="color"] { width:100%; font-size:13px; }
+.sidebar .btn { width:100%; font-size:13px; padding:8px 12px; }
+.result-text { font-weight:700; font-size:18px; text-align:center; margin-top:12px; }
 </style>
 </head>
 <body>
@@ -343,15 +143,16 @@ function atualizarTabela() {
     tableBody.appendChild(tr);
   });
 }
-function salvarPremios() {
-  localStorage.setItem('premios', JSON.stringify(premios));
-}
+
+function salvarPremios() { localStorage.setItem('premios', JSON.stringify(premios)); }
+
 function removerItem(idx) {
-  premios.splice(idx, 1);
+  premios.splice(idx,1);
   salvarPremios();
   atualizarTabela();
   gerarItens();
 }
+
 function editarItem(idx) {
   const item = premios[idx];
   itemNameInput.value = item.nome;
@@ -360,14 +161,15 @@ function editarItem(idx) {
   addItemBtn.textContent = "Salvar Alterações";
   addItemBtn.style.background = "#f39c12";
 }
+
 function gerarItens() {
   roletaEl.innerHTML = '';
   clones = [];
-  for (let i = 0; i < 120; i++) {
-    const premio = premios[Math.floor(Math.random() * premios.length)];
+  for(let i=0;i<120;i++){
+    const premio = premios[Math.floor(Math.random()*premios.length)];
     const item = document.createElement('div');
     item.className = 'item';
-    if (premio) {
+    if(premio){
       item.dataset.valor = premio.nome;
       item.dataset.cor = premio.cor;
       item.style.background = premio.cor;
@@ -381,128 +183,132 @@ function gerarItens() {
   }
   roletaEl.style.width = `${clones.length * itemFullWidth}px`;
   roletaEl.style.transition = 'none';
-  roletaEl.style.transform = 'translateX(0)';
+  roletaEl.style.transform = `translateX(0)`;
 }
+
 function atualizarVidas() {
   vidasDisplay.innerHTML = '';
-  for (let i = 0; i < 3; i++) {
+  for(let i=0;i<3;i++){
     const heart = document.createElement('span');
-    heart.className = 'vida-icon' + (i >= vidas ? ' desativada' : '');
-    heart.textContent = '❤️';
+    heart.className = 'vida-icon'+(i>=vidas?' desativada':'');
+    heart.textContent='❤️';
     vidasDisplay.appendChild(heart);
   }
 }
-function girarRoleta() {
-  if (isSpinning || vidas <= 0) return;
-  isSpinning = true;
-  resultado.textContent = '';
-  if (premios.length === 0) {
-    alert("Adicione ao menos um item antes de girar!");
-    isSpinning = false;
-    return;
-  }
 
+function girarRoleta() {
+  if(isSpinning || vidas<=0) return;
+  if(premios.length===0){ alert("Adicione ao menos um item antes de girar!"); return; }
+
+  isSpinning = true;
+  resultado.textContent='';
   vidas--;
   atualizarVidas();
-  if (vidas === 0) {
-    spinBtn.disabled = true;
-    resultado.textContent = '💀 Fim de jogo! Suas vidas acabaram.';
-  }
+  if(vidas===0){ spinBtn.disabled=true; resultado.textContent='💀 Fim de jogo! Suas vidas acabaram.'; }
 
-  const indexAlvo = Math.floor(Math.random() * (clones.length - 40)) + 40;
-  const destino = indexAlvo * itemFullWidth - roletaEl.parentElement.offsetWidth / 2 + itemFullWidth / 2;
+  // Reset roleta
+  roletaEl.style.transition='none';
+  roletaEl.style.transform=`translateX(0)`;
 
-  roletaEl.style.transition = `transform ${spinDuration / 1000}s cubic-bezier(0.16, 1, 0.3, 1)`;
+  const indexAlvo = Math.floor(Math.random()*(clones.length-40))+40;
+  const destino = indexAlvo*itemFullWidth - roletaEl.parentElement.offsetWidth/2 + itemFullWidth/2;
+
+  // animação
+  roletaEl.style.transition = `transform ${spinDuration/1000}s cubic-bezier(0.16,1,0.3,1)`;
   roletaEl.style.transform = `translateX(-${destino}px)`;
 
   iniciarTickDuranteGiro(spinDuration);
 
-  setTimeout(() => {
-    clones.forEach(i => i.classList.remove('highlight'));
+  setTimeout(()=>{
+    clones.forEach(i=>i.classList.remove('highlight'));
     clones[indexAlvo].classList.add('highlight');
-    if (vidas > 0) {
-      resultado.textContent = '🎯 Item sorteado: ' + clones[indexAlvo].dataset.valor;
-    }
-    isSpinning = false;
+    if(vidas>0){ resultado.textContent='🎯 Item sorteado: '+clones[indexAlvo].dataset.valor; }
+    isSpinning=false;
   }, spinDuration);
 }
-function iniciarTickDuranteGiro(duracaoTotal) {
-  let lastX = null, lastTickTime = 0, lastHighlightIndex = -1;
-  const tickMin = 30, tickMax = 250, startTime = performance.now();
-  const center = roletaEl.parentElement.offsetWidth / 2;
 
-  function loop(now) {
-    const elapsed = now - startTime;
-    if (elapsed >= duracaoTotal - 500) return;
+function iniciarTickDuranteGiro(duracaoTotal){
+  let lastX = null, lastTickTime = 0, lastHighlightIndex=-1;
+  const tickMin=30, tickMax=250, startTime=performance.now();
+  const center=roletaEl.parentElement.offsetWidth/2;
+
+  function loop(now){
+    const elapsed = now-startTime;
+    if(elapsed>=duracaoTotal-500) return;
+
     const matrix = new DOMMatrix(getComputedStyle(roletaEl).transform);
     const currentX = matrix.m41;
-    if (lastX !== null) {
-      const delta = Math.abs(currentX - lastX);
-      const idealInterval = Math.max(tickMin, Math.min(tickMax, 800 / (delta + 0.1)));
-      if (now - lastTickTime > idealInterval) {
-        const visualCenter = Math.abs(currentX) + center;
-        const index = Math.floor(visualCenter / itemFullWidth);
-        if (index !== lastHighlightIndex) {
+
+    if(lastX!==null){
+      const delta = Math.abs(currentX-lastX);
+      const idealInterval = Math.max(tickMin, Math.min(tickMax, 800/(delta+0.1)));
+      if(now-lastTickTime > idealInterval){
+        const visualCenter = Math.abs(currentX)+center;
+        const index = Math.floor(visualCenter/itemFullWidth);
+        if(index!==lastHighlightIndex){
           tickSound.pause();
-          tickSound.currentTime = 0;
+          tickSound.currentTime=0;
           tickSound.play();
-          lastTickTime = now;
-          lastHighlightIndex = index;
+          lastTickTime=now;
+          lastHighlightIndex=index;
         }
       }
     }
-    lastX = currentX;
+    lastX=currentX;
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 }
 
-const spinBtn = document.createElement('button');
-spinBtn.textContent = 'Girar Roleta';
-spinBtn.id = 'spinBtn';
-spinBtn.className = 'btn';
-spinBtn.style.marginTop = '12px';
-spinBtn.onclick = girarRoleta;
-document.body.insertBefore(spinBtn, document.querySelector('.table-wrap'));
+// Spin button
+const spinBtn=document.createElement('button');
+spinBtn.textContent='Girar Roleta';
+spinBtn.id='spinBtn';
+spinBtn.className='btn';
+spinBtn.style.marginTop='12px';
+spinBtn.onclick=girarRoleta;
+document.body.insertBefore(spinBtn,document.querySelector('.table-wrap'));
 
-addItemBtn.addEventListener('click', () => {
-  const nome = itemNameInput.value.trim();
-  const cor = itemColorInput.value;
+// Eventos
+addItemBtn.addEventListener('click',()=>{
+  const nome=itemNameInput.value.trim();
+  const cor=itemColorInput.value;
+  if(!nome) return alert("Preencha Nome");
 
-  if (!nome) return alert("Preencha Nome");
-
-  if (itemEditandoIndex !== null) {
-    premios[itemEditandoIndex] = { nome, cor };
-    itemEditandoIndex = null;
-    addItemBtn.textContent = "Adicionar";
-    addItemBtn.style.background = "#00b27a";
+  if(itemEditandoIndex!==null){
+    premios[itemEditandoIndex]={nome,cor};
+    itemEditandoIndex=null;
+    addItemBtn.textContent="Adicionar";
+    addItemBtn.style.background="#00b27a";
   } else {
-    premios.push({ nome, cor });
+    premios.push({nome,cor});
   }
 
   salvarPremios();
   atualizarTabela();
   gerarItens();
-  itemNameInput.value = "";
-  itemColorInput.value = "#cc00ff";
+  itemNameInput.value="";
+  itemColorInput.value="#cc00ff";
 });
-resetItemsBtn.addEventListener('click', () => {
-  if (confirm("Tem certeza que deseja resetar todos os itens?")) {
-    premios = [];
+
+resetItemsBtn.addEventListener('click',()=>{
+  if(confirm("Tem certeza que deseja resetar todos os itens?")){
+    premios=[];
     salvarPremios();
     atualizarTabela();
     gerarItens();
-    itemEditandoIndex = null;
-    addItemBtn.textContent = "Adicionar";
-    addItemBtn.style.background = "#00b27a";
+    itemEditandoIndex=null;
+    addItemBtn.textContent="Adicionar";
+    addItemBtn.style.background="#00b27a";
   }
 });
-resetLivesBtn.addEventListener('click', () => {
-  if (confirm("Tem certeza que deseja resetar suas vidas?")) {
-    vidas = 3;
+
+resetLivesBtn.addEventListener('click',()=>{
+  if(confirm("Tem certeza que deseja resetar suas vidas?")){
+    vidas=3;
     atualizarVidas();
-    spinBtn.disabled = false;
-    resultado.textContent = '';
+    spinBtn.disabled=false;
+    resultado.textContent='';
   }
 });
 
