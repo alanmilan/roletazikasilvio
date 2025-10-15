@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<title>Roleta - Itens Dinâmicos</title>
+<title>Roleta Krustzao</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
@@ -487,19 +487,23 @@ addItemBtn.addEventListener('click', () => {
   itemColorInput.value = "#cc00ff";
 });
 resetItemsBtn.addEventListener('click', () => {
-  premios = [];
-  salvarPremios();
-  atualizarTabela();
-  gerarItens();
-  itemEditandoIndex = null;
-  addItemBtn.textContent = "Adicionar";
-  addItemBtn.style.background = "#00b27a";
+  if (confirm("Tem certeza que deseja resetar todos os itens?")) {
+    premios = [];
+    salvarPremios();
+    atualizarTabela();
+    gerarItens();
+    itemEditandoIndex = null;
+    addItemBtn.textContent = "Adicionar";
+    addItemBtn.style.background = "#00b27a";
+  }
 });
 resetLivesBtn.addEventListener('click', () => {
-  vidas = 3;
-  atualizarVidas();
-  spinBtn.disabled = false;
-  resultado.textContent = '';
+  if (confirm("Tem certeza que deseja resetar suas vidas?")) {
+    vidas = 3;
+    atualizarVidas();
+    spinBtn.disabled = false;
+    resultado.textContent = '';
+  }
 });
 
 atualizarTabela();
