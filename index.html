@@ -129,17 +129,21 @@ let itemEditandoIndex = null;
 const itemFullWidth = 190;
 const spinDuration = 12000;
 
+// ✅ CORREÇÃO: cor aparece na linha da tabela
 function atualizarTabela() {
   tableBody.innerHTML = '';
   premios.forEach((p, idx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="row-img"><img src="${DEFAULT_IMG}" style="background:${p.cor}"/></td>
-      <td>${p.nome}</td>
-      <td>
+      <td class="row-img" style="background:${p.cor}">
+        <img src="${DEFAULT_IMG}" alt="${p.nome}"/>
+      </td>
+      <td style="background:${p.cor}; font-weight:700;">${p.nome}</td>
+      <td style="background:${p.cor}">
         <button onclick="editarItem(${idx})" style="padding:6px 10px;margin-right:6px;background:#337ab7;color:#fff;border:none;border-radius:6px;cursor:pointer">Editar</button>
         <button onclick="removerItem(${idx})" style="padding:6px 10px;background:#b33b3b;color:#fff;border:none;border-radius:6px;cursor:pointer">Remover</button>
       </td>`;
+    tr.style.color = "#fff";
     tableBody.appendChild(tr);
   });
 }
@@ -206,14 +210,12 @@ function girarRoleta() {
   atualizarVidas();
   if(vidas===0){ spinBtn.disabled=true; resultado.textContent='💀 Fim de jogo! Suas vidas acabaram.'; }
 
-  // Reset roleta
   roletaEl.style.transition='none';
   roletaEl.style.transform=`translateX(0)`;
 
   const indexAlvo = Math.floor(Math.random()*(clones.length-40))+40;
   const destino = indexAlvo*itemFullWidth - roletaEl.parentElement.offsetWidth/2 + itemFullWidth/2;
 
-  // animação
   roletaEl.style.transition = `transform ${spinDuration/1000}s cubic-bezier(0.16,1,0.3,1)`;
   roletaEl.style.transform = `translateX(-${destino}px)`;
 
@@ -260,7 +262,6 @@ function iniciarTickDuranteGiro(duracaoTotal){
   requestAnimationFrame(loop);
 }
 
-// Spin button
 const spinBtn=document.createElement('button');
 spinBtn.textContent='Girar Roleta';
 spinBtn.id='spinBtn';
@@ -269,7 +270,6 @@ spinBtn.style.marginTop='12px';
 spinBtn.onclick=girarRoleta;
 document.body.insertBefore(spinBtn,document.querySelector('.table-wrap'));
 
-// Eventos
 addItemBtn.addEventListener('click',()=>{
   const nome=itemNameInput.value.trim();
   const cor=itemColorInput.value;
